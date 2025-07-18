@@ -48,8 +48,9 @@
 
     <!-- Story Upload -->
     <div class="story-upload">
-      <input type="file" id="storyUploadInput" accept="image/*" />
-      <button onclick="uploadStory()">Add Story</button>
+     <input type="file" id="storyUploadInput" accept="image/*" style="display:none" onchange="uploadStory()" />
+<button onclick="document.getElementById('storyUploadInput').click()">Add Story</button>
+
     </div>
 
     <!-- Upload Section -->

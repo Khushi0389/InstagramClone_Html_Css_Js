@@ -170,19 +170,31 @@ function renderStories() {
   const container = document.getElementById("storyBar");
   if (!container) return;
 
-  storiesData = storiesData.filter(u =>
-    u.stories.some(s => Date.now() - s.timestamp <= 86400000)
-  );
+  container.innerHTML = "";  
+
+  storiesData = storiesData.map(user => {
+  // Remove old stories (older than 24hrs)
+  user.stories = user.stories.filter(s => Date.now() - s.timestamp <= 86400000);
+  return user;
+}).filter(user => user.stories.length > 0);
+
   storiesData.forEach(user => {
-    const firstStory = user.stories[0];
+  user.stories.forEach((story, index) => {
     const div = document.createElement("div");
     div.className = "story-item";
     div.innerHTML = `
-      <img src="${firstStory.img}" onclick="openStory('${user.username}', 0)">
-      <p>${user.username}</p>
+      <img src="${story.img}" onclick="openStory('${user.username}', ${index})">
+      <p style="display:flex; justify-content:space-between; align-items:center;">
+  ${user.username}
+  ${user.username === currentUser ? 
+    `<span onclick="deleteSingleStory('${user.username}', ${index})" style="cursor:pointer; font-size:0.9em;">🗑️</span>` 
+    : ""}
+</p>
+
     `;
     container.appendChild(div);
   });
+});
 
   saveToStorage();
 }
@@ -190,15 +202,19 @@ function renderStories() {
 function uploadStory() {
   const input = document.getElementById("storyUploadInput");
   const file = input.files[0];
+  console.log("Upload triggered:", file);  
+
   if (!file || !currentUser) return alert("Login and select image");
 
   const reader = new FileReader();
   reader.onload = e => {
+    console.log("Image base64:", e.target.result.slice(0, 30));  
     addStory(e.target.result);
     input.value = "";
   };
   reader.readAsDataURL(file);
 }
+
 
 function addStory(imageData) {
   if (!currentUser) return;
@@ -241,6 +257,23 @@ function openStory(username, index = 0) {
 function closeStory() {
   document.getElementById("storyModal").style.display = "none";
 }
+function deleteSingleStory(username, index) {
+  if (!confirm("Delete this story?")) return;
+
+  const user = storiesData.find(u => u.username === username);
+  if (!user) return;
+
+  user.stories.splice(index, 1);
+
+  // If user has no stories left, remove user from array
+  if (user.stories.length === 0) {
+    storiesData = storiesData.filter(u => u.username !== username);
+  }
+
+  saveToStorage();
+  renderStories();
+}
+
 
 // --------- AUTH ---------
 function registerUser() {
