@@ -1,0 +1,59 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  display: flex;
+  background: #fff;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  width: 200px;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+  background: #fafafa;
+  min-height: 100vh;
+}
+
+.sidebar nav a {
+  display: block;
+  margin: 15px 0;
+  text-decoration: none;
+  color: #000;
+}
+
+.sidebar nav a.active {
+  font-weight: bold;
+  color: #262626;
+}
+
+main {
+  flex: 1;
+  padding: 30px;
+}
+
+.search-panel {
+  max-width: 300px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.search-panel input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+#recentSearches p {
+  font-size: 14px;
+  margin: 5px 0;
+  cursor: pointer;
+  color: #333;
+}

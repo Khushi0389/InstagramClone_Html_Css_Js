@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <h1>Instagram</h1>
+      <nav>
+        <a onclick="navigate('home.html')">🏠 Home</a>
+        <a onclick="navigate('profile.html')">👤 Profile</a>
+        <a onclick="logout()">🚪 Logout</a>
+      </nav>
+    </aside>
+
+    <main>
+      <h2>Your Profile</h2>
+      <p id="profileStats"></p>
+      <div id="userPosts"></div>
+    </main>
+  </div>
+
+  <script>
+    function navigate(p) { window.location.href = p; }
+    function logout() {
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "index.html";
+    }
+
+    const user = localStorage.getItem("loggedInUser");
+    const posts = JSON.parse(localStorage.getItem("postsData") || "[]").filter(p => p.username === user);
+
+    document.getElementById("profileStats").innerText =
+      `Posts: ${posts.length}, Likes: ${posts.reduce((a, b) => a + b.likes, 0)}, Saved: ${posts.filter(p => p.saved).length}`;
+
+    document.getElementById("userPosts").innerHTML =
+      posts.map(p => `<div class="post"><h4>${p.username}</h4><img src="${p.img}"><p>${p.caption}</p></div>`).join("");
+  </script>
+</body>
+</html>

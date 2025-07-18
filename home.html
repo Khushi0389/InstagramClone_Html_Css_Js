@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instagram Clone</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <h1>Instagram</h1>
+    <nav>
+      <a onclick="navigate('home.html')">🏠 Home</a>
+      <a onclick="navigate('search.html')">🔍 Search</a>
+      <a onclick="navigate('explore.html')">🌍 Explore</a>
+      <a>🎥 Reels</a>
+      <a>📩 Messages</a>
+      <a>❤️ Notifications</a>
+      <a onclick="document.getElementById('uploadImage').click()">➕ Create</a>
+      <a onclick="navigate('profile.html')">👤 Profile</a>
+    </nav>
+  </aside>
+
+  <main>
+    <!-- Top bar with stories and dark mode -->
+    <div class="top-bar">
+      <!-- Stories Section -->
+      <div class="story-bar" id="storyBar"></div>
+
+      <!-- Story Modal -->
+      <div id="storyModal" class="story-modal">
+        <img id="storyImage" />
+        <button onclick="closeStory()" class="close-btn">✖</button>
+      </div>
+
+      <!-- Dark Mode Toggle -->
+      <div class="toggle-mode">
+        <span id="themeIcon">🌞</span>
+        <label class="switch">
+          <input type="checkbox" id="darkToggle">
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Story Upload -->
+    <div class="story-upload">
+     <input type="file" id="storyUploadInput" accept="image/*" onchange="uploadStory()" />
+
+    </div>
+
+    <!-- Upload Section -->
+    <div id="uploadSection">
+      <input type="file" id="uploadImage" accept="image/*">
+      <div id="cropContainer">
+        <img id="cropImagePreview" style="max-width:100%">
+        <button onclick="cropAndUpload()">Crop & Post</button>
+      </div>
+      <input type="text" id="captionInput" placeholder="Enter caption...">
+    </div>
+
+    <!-- Posts Feed -->
+    <div id="posts"></div>
+  </main>
+</div>
+
+<!-- Comment Modal -->
+<div id="commentModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">×</span>
+    <div id="modalComments"></div>
+    <div class="emoji-bar">
+      <span onclick="insertEmoji('😊')">😊</span>
+      <span onclick="insertEmoji('🔥')">🔥</span>
+      <span onclick="insertEmoji('❤️')">❤️</span>
+    </div>
+    <input type="text" id="newComment" placeholder="Add a comment..." />
+    <button onclick="addComment()">Post</button>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="auth-container">
+    <h2>Register</h2>
+    <input type="text" id="registerUsername" placeholder="Enter username" />
+    <input type="password" id="registerPassword" placeholder="Enter password" />
+    <button onclick="registerUser()">Register</button>
+    <p>Already have an account? <a href="index.html">Login</a></p>
+  </div>
+  <script>
+    function registerUser() {
+      const username = document.getElementById("registerUsername").value.trim();
+      const password = document.getElementById("registerPassword").value.trim();
+      if (!username || !password) return alert("All fields are required!");
+
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const exists = users.some(u => u.username === username);
+      if (exists) return alert("Username already exists!");
+
+      users.push({ username, password });
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Registration successful! Please login.");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
