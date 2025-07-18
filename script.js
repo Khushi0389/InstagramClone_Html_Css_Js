@@ -2,15 +2,13 @@ let postsData = JSON.parse(localStorage.getItem("postsData")) || [];
 let currentPostIndex = null;
 let cropper;
 let followData = JSON.parse(localStorage.getItem("followData")) || {};
-const currentUser = localStorage.getItem("loggedInUser");
 let storiesData = JSON.parse(localStorage.getItem("storiesData")) || [];
+const currentUser = localStorage.getItem("loggedInUser");
 
-// Initialize follow data
 if (currentUser && !followData[currentUser]) {
   followData[currentUser] = { followers: [], following: [] };
 }
 
-// UTILS
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - ts) / 1000);
   if (diff < 60) return `${diff}s ago`;
@@ -25,9 +23,9 @@ function saveToStorage() {
   localStorage.setItem("storiesData", JSON.stringify(storiesData));
 }
 
-// POSTS
 function renderPosts() {
   const container = document.getElementById("posts");
+  if (!container) return;
   container.innerHTML = "";
 
   postsData.forEach((post, i) => {
@@ -52,7 +50,6 @@ function renderPosts() {
   });
 }
 
-// FOLLOW
 function renderFollowBtn(username) {
   const isFollowing = followData[currentUser]?.following.includes(username);
   return `<button onclick="toggleFollow('${username}')">${isFollowing ? "Unfollow" : "Follow"}</button>`;
@@ -77,7 +74,6 @@ function toggleFollow(userToFollow) {
   renderPosts();
 }
 
-// LIKE, SAVE, DELETE POST
 function toggleLike(i) {
   postsData[i].liked = !postsData[i].liked;
   postsData[i].likes += postsData[i].liked ? 1 : -1;
@@ -96,7 +92,6 @@ function deletePost(i) {
   }
 }
 
-// COMMENTS
 function openCommentModal(index) {
   currentPostIndex = index;
   const modal = document.getElementById("commentModal");
@@ -133,8 +128,7 @@ function insertEmoji(e) {
   input.focus();
 }
 
-// CROP + POST
-document.getElementById("uploadImage").addEventListener("change", function () {
+document.getElementById("uploadImage")?.addEventListener("change", function () {
   const file = this.files[0];
   if (!file) return;
   const reader = new FileReader();
@@ -171,10 +165,10 @@ function cropAndUpload() {
   });
 }
 
-// STORIES
+// --------- STORIES ---------
 function renderStories() {
   const container = document.getElementById("storyBar");
-  container.innerHTML = "";
+  if (!container) return;
 
   storiesData = storiesData.filter(u =>
     u.stories.some(s => Date.now() - s.timestamp <= 86400000)
@@ -196,29 +190,16 @@ function renderStories() {
 function uploadStory() {
   const input = document.getElementById("storyUploadInput");
   const file = input.files[0];
-  const username = localStorage.getItem("loggedInUser");
-
-  if (!file || !username) {
-    alert("Please select an image and make sure you're logged in.");
-    return;
-  }
+  if (!file || !currentUser) return alert("Login and select image");
 
   const reader = new FileReader();
-  reader.onload = () => {
-    const stories = JSON.parse(localStorage.getItem("stories") || "[]");
-
-    stories.push({
-      user: username,
-      image: reader.result,
-      timestamp: Date.now(),
-    });
-
-    localStorage.setItem("stories", JSON.stringify(stories));
+  reader.onload = e => {
+    addStory(e.target.result);
     input.value = "";
-    renderStories(); // update story bar
   };
   reader.readAsDataURL(file);
 }
+
 function addStory(imageData) {
   if (!currentUser) return;
 
@@ -234,9 +215,6 @@ function addStory(imageData) {
   saveToStorage();
   renderStories();
 }
-
-
-
 
 function openStory(username, index = 0) {
   const user = storiesData.find(u => u.username === username);
@@ -264,7 +242,7 @@ function closeStory() {
   document.getElementById("storyModal").style.display = "none";
 }
 
-// AUTH
+// --------- AUTH ---------
 function registerUser() {
   const uname = document.getElementById("regUsername").value.trim();
   const pwd = document.getElementById("regPassword").value;
@@ -289,7 +267,7 @@ function loginUser() {
   window.location.href = "home.html";
 }
 
-// THEME
+// --------- THEME & ROUTE ---------
 function applyTheme() {
   const theme = localStorage.getItem("theme") || "light";
   document.body.classList.add(theme);
@@ -297,7 +275,7 @@ function applyTheme() {
   document.getElementById("darkToggle").checked = theme === "dark";
 }
 
-document.getElementById("darkToggle").addEventListener("change", () => {
+document.getElementById("darkToggle")?.addEventListener("change", () => {
   const theme = document.getElementById("darkToggle").checked ? "dark" : "light";
   document.body.classList.remove("light", "dark");
   document.body.classList.add(theme);
@@ -305,7 +283,6 @@ document.getElementById("darkToggle").addEventListener("change", () => {
   document.getElementById("themeIcon").textContent = theme === "dark" ? "🌙" : "🌞";
 });
 
-// ROUTING
 function navigate(page) {
   window.location.href = page;
 }

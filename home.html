@@ -48,8 +48,8 @@
 
     <!-- Story Upload -->
     <div class="story-upload">
-     <input type="file" id="storyUploadInput" accept="image/*" onchange="uploadStory()" />
-
+      <input type="file" id="storyUploadInput" accept="image/*" />
+      <button onclick="uploadStory()">Add Story</button>
     </div>
 
     <!-- Upload Section -->
@@ -77,7 +77,7 @@
       <span onclick="insertEmoji('🔥')">🔥</span>
       <span onclick="insertEmoji('❤️')">❤️</span>
     </div>
-    <input type="text" id="newComment" placeholder="Add a comment..." />
+    <input type="text" id="newComment" placeholder="Add a comment...">
     <button onclick="addComment()">Post</button>
   </div>
 </div>
